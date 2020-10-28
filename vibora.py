@@ -17,7 +17,7 @@ food = vector(0, 0)
 snake = [vector(10, 0)]
 aim = vector(0, -10)
 
-gameSpood = 100
+gameSpood = 100 # a speed variable that will get changed later
 
 def change(x, y):
     "Change snake direction."
@@ -33,11 +33,11 @@ def move():
     head = snake[-1].copy()
     head.move(aim)
 
-    if not inside(head):
-        if not -200 < head.x < 200:
-            head = vector(-head.x, head.y)
-        if not -200 < head.y < 200:
-            head = vector(head.x, -head.y)
+    if not inside(head): # if not inside the playing field 
+        if not -200 < head.x < 200: # on x
+            head = vector(-head.x, head.y) # tp head to other side
+        if not -200 < head.y < 200: # on y
+            head = vector(head.x, -head.y) # tp head to other side
 
     if head in snake:
         square(head.x, head.y, 9, 'red')

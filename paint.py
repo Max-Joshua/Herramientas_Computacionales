@@ -26,15 +26,15 @@ def square(start, end):
 def drawCircle(start, end):
     "Draw circle from start as centerpoint, to end as radious."
 
-    radious = math.sqrt((start.x - end.x) ** 2 + (start.y - end.y) ** 2)
+    radious = math.sqrt((start.x - end.x) ** 2 + (start.y - end.y) ** 2) # get the radious of the ball by using pythagoras theorum
 
-    up()
-    goto(start.x, start.y - radious)
+    up() # stop drawing 
+    goto(start.x, start.y - radious) # go to the point at the bottom of the circle, because turtle starts drawing there
     down()
 
-    begin_fill()
+    begin_fill() 
 
-    circle(radious)
+    circle(radious) # make the circle
 
     end_fill()
 
