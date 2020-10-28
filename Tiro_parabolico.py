@@ -16,6 +16,7 @@ from freegames import vector
 ball = vector(-200, -200)
 speed = vector(0, 0)
 targets = []
+score = 0 # we need to keep track of the score someway
 
 def tap(x, y):
     "Respond to screen tap."
@@ -45,6 +46,7 @@ def draw():
 
 def move():
     "Move ball and targets."
+    global score # make sure the variable is readable inside the function!
     if randrange(40) == 0:
         y = randrange(-150, 150)
         target = vector(200, y)
@@ -63,6 +65,10 @@ def move():
     for target in dupe:
         if abs(target - ball) > 13:
             targets.append(target)
+        else:
+            # if the target is not drawn, it means that it was killed, so we sum one to score
+            score += 1
+            print(f'score: {score}')
 
     draw()
 
@@ -79,18 +85,3 @@ tracer(False)
 onscreenclick(tap)
 move()
 done()
-Logo
-
-Free Python Games
-
-
-Donate
-If you or your organization uses Free Games, consider donating:
-
-Donate to Free Python Games
-
-Related Topics
-Documentation overview
-Previous: Simon Says
-Next: Bounce
-Quick search
