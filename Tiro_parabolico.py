@@ -79,18 +79,3 @@ tracer(False)
 onscreenclick(tap)
 move()
 done()
-Logo
-
-Free Python Games
-
-
-Donate
-If you or your organization uses Free Games, consider donating:
-
-Donate to Free Python Games
-
-Related Topics
-Documentation overview
-Previous: Simon Says
-Next: Bounce
-Quick search
