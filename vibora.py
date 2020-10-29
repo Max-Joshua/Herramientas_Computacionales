@@ -11,11 +11,14 @@ Exercises
 import math
 from turtle import *
 from random import randrange
+from random import shuffle
 from freegames import square, vector
 
 food = vector(0, 0)
 snake = [vector(10, 0)]
 aim = vector(0, -10)
+colors = ["green", "blue", "yellow", "grey", "black"]
+shuffle(colors)
 
 gameSpood = 100 # a speed variable that will get changed later
 
@@ -56,9 +59,9 @@ def move():
     clear()
 
     for body in snake:
-        square(body.x, body.y, 9, 'black')
+        square(body.x, body.y, 9, colors[0])
 
-    square(food.x, food.y, 9, 'green')
+    square(food.x, food.y, 9, colors[1])
     update()
     # calculate speed to go fater when more food is present:
     gameSpood = 100 - math.log(len(snake), 1.1)
