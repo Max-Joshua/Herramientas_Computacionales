@@ -60,8 +60,17 @@ class object:
         self.yVel += self.yAxcel * physiscDeltaTime - self.yVel / self.drag
         self.x += self.xVel * physiscDeltaTime
         self.y += self.yVel * physiscDeltaTime
-        self.sprite.x = self.x
+
+        if self.xVel > 0:
+            look = 1
+            offset = 0
+        else:
+            look = -1
+            offset = self.sprite.width
+
+        self.sprite.x = self.x + offset
         self.sprite.y = self.y
+        self.sprite.update(scale_x = look)
     
     def checkCollisions(self):
         activateGravity = False
