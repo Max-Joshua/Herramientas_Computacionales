@@ -1,9 +1,27 @@
-import pyglet, os
+import pyglet, os, json
 
 width = 1500
 height = 800
 
 window = pyglet.window.Window(1500, 800, resizable=False, vsync=True)
+
+mainBatch = pyglet.graphics.Batch()
+bkgBatch = pyglet.graphics.Batch()
+
+objects = []
+
+plataforms = []
+
+canJump = True
+
+def gameStarter():
+    with open('game/information.json') as file:
+        info = json.load(file)
+
+    objects.append(object(images.imgDict['Protagonist'], mainBatch, info['player']['x'], info['player']['y']))
+
+    for plataform in info['levels'][info['player']['currentlvl']]['objects']:
+        plataforms.append(staticObject(plataform['x'], plataform['y'], plataform['width'], plataform['height'], images.imgDict['test']))
 
 class imagesLoader:
     spriteDict = {}
@@ -67,23 +85,26 @@ class object:
             self.yAxcel = 0
 
 class staticObject:
-    pass
+    x = 0
+    y = 0
+    width = 0
+    height = 0
 
-images = imagesLoader()
-
-mainBatch = pyglet.graphics.Batch()
-
-objects = []
-
-objects.append(object(images.imgDict['Protagonist'], mainBatch))
-
-canJump = True
+    def __init__(self, x, y, width, height, spriteImg):
+        self.x = x
+        self.y = y
+        self.width = width
+        self.height = height
+        self.sprite = pyglet.sprite.Sprite(img = spriteImg, batch = bkgBatch)
+        self.sprite.update(x=self.x, y=self.y,scale_x=self.width / self.sprite.width, scale_y = self.height / self.sprite.height)
 
 @window.event
 def on_draw():
+    global bkgBatch, mainBatch
     window.clear()
-    for object in objects:
-        object.sprite.draw()
+    bkgBatch.draw()
+    mainBatch.draw()
+
 
 moveForce = 1000
 
@@ -105,6 +126,9 @@ def on_key_press(symbol, modifiers):
 
 @window.event
 def on_key_release(symbol, modifiers):
+    if symbol == 119: # if pressed the W key
+        if objects[0].yAxcel > 0:
+            objects[0].yAxcel = 0
     if symbol == 97: # if pressed the A key
         objects[0].xAxcel = 0
 
@@ -122,6 +146,9 @@ def runPhysics(dx):
         
         object.calculateNextPoint()
         object.checkCollisions()
+
+images = imagesLoader()
+gameStarter()
 
 pyglet.clock.schedule_interval(runPhysics, physiscDeltaTime)
 
