@@ -97,8 +97,12 @@ class object:
                             self.yAxcel = 0
                             self.yVel = 0
                             activateGravity = True
+                        elif self.y < plataform.y:
+                            self.y = plataform.y - self.sprite.height
+                            self.yAxcel = 0
+                            self.yVel = 0
                         
-                        if plataform.y + plataform.height >= self.y >= plataform.y:
+                        if plataform.y + plataform.height >= self.y > plataform.y:
                             activateGravity = True
 
                     if plataform.y - self.sprite.height  + offsetRenderer <= self.y <= plataform.y + plataform.height - offsetRenderer:
