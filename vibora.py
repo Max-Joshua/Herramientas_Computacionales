@@ -1,11 +1,9 @@
 """
-Exercises
-
-1. How do you make the snake faster or slower? -done
-2. How can you make the snake go around the edges? -done
-3. How would you move the food?
-4. Change the snake to respond to arrow keys.
-
+Modified version of "snake" game. (Taken from freegames.com)
+by:
+Joshua Amaya
+José Derbez
+Alejandro Fernandez
 """
 
 import math

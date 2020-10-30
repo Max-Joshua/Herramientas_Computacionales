@@ -1,12 +1,9 @@
-"""Cannon, hitting targets with projectiles.
-
-Exercises
-
-1. Keep score by counting target hits.
-2. Vary the effect of gravity.
-3. Apply gravity to the targets.
-4. Change the speed of the ball.
-
+"""
+Modified version of "cannonball" game. (Taken from freegames.com)
+by:
+Joshua Amaya
+José Derbez
+Alejandro Fernandez
 """
 
 from random import randrange
