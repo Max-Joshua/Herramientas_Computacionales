@@ -1,3 +1,11 @@
+"""
+thieves' hole redeem is a plataformer game, where magic and bad guys collide!
+Have fun going through different dungeos to save your loved one.
+
+thieves' hole redeem by Alejandro Fernandez del Valle Herrera, Joshua Rubén Amaya Camilo and José Emilio Derbez Safie 
+is licensed under CC BY 4.0. To view a copy of this license, visit https://creativecommons.org/licenses/by/4.0 
+"""
+
 import pyglet, os, json, random
 
 
