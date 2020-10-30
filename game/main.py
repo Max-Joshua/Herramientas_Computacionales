@@ -142,8 +142,17 @@ class staticObject:
         self.y = y
         self.width = width
         self.height = height
-        self.sprite = pyglet.sprite.Sprite(img = spriteImg, batch = bkgBatch)
-        self.sprite.update(x=self.x, y=self.y,scale_x=self.width / self.sprite.width, scale_y = self.height / self.sprite.height)
+
+        self.sprites = [pyglet.sprite.Sprite(img = spriteImg, batch = bkgBatch)]
+        scale = self.width / (self.width // self.sprites[0].width + 1) / self.sprites[0].width
+        self.sprites[0].update(x=self.x, y=self.y + self.height - self.sprites[0].height,scale_x=scale)
+
+        for i in range(1, self.width // self.sprites[0].width + 1):
+            self.sprites.append(pyglet.sprite.Sprite(img = spriteImg, batch = bkgBatch))
+            self.sprites[i].update(x=self.x + scale * self.sprites[0].width * i, y=self.y + self.height - self.sprites[0].height, scale_x = scale)
+
+        #self.sprite = pyglet.sprite.Sprite(img = spriteImg, batch = bkgBatch)
+        #self.sprite.update(x=self.x, y=self.y,scale_x=self.width / self.sprite.width, scale_y = self.height / self.sprite.height)
 
 @window.event
 def on_draw():
