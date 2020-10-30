@@ -1,4 +1,10 @@
-# start of code!
+"""
+Modified version of "paint" game. (Taken from freegames.com)
+by:
+Joshua Amaya
+José Derbez
+Alejandro Fernandez
+"""
 from turtle import *
 from freegames import vector
 import math
