@@ -1,7 +1,7 @@
-# Herramientas_Computacionales Final Proyect 1
+# Herramientas_Computacionales Final Proyect 
 ## José Derbez, Joshua Amaya and Alejandro Fernandez
 
-This proyect consists of slight modifications made to 3 differenent Python games taken from "Freegames" 
+This proyect consists of slight modifications made to 3 differenent Python games taken from "Freegames", and a spooky platformer to conmemorate the spooky season!
 
 Play a new videogame:
   
