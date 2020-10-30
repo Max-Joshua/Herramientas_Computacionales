@@ -42,14 +42,19 @@ def rectangle(start, end):
     "Draw rectangle from start to end."
     up()
     goto(start.x, start.y)
-    down()
+    begin_fill()
+    goto(end.x, end.y)
+    
     begin_fill()
     
-    for count in range(2):
+    for count in range(2)
         forward(end.x - start.x)
         left(90)
-        forward(end.x - (2 * start.x))
+        forward(end.y - 2 * start.y)
         left(90)
+    end_fil()
+    
+   
 
 def triangle(start, end):
     "Draw triangle from start to end."
