@@ -66,7 +66,7 @@ def gameStarter():
 
     # create enemies
     for enemy in info['levels'][info['player']['currentlvl']]['enemies']:
-        if enemy['type'] == 0:
+        if enemy['type'] == 0: # nice
             objects.append(object(images.imgDict['Enemie0'], mainBatch, enemy['x'], enemy['y'], enemy["HP"]))
         elif enemy['type'] == 1:
             objects.append(object(images.imgDict['Enemie1'], mainBatch, enemy['x'], enemy['y'], enemy["HP"]))
@@ -417,7 +417,7 @@ def on_draw():
     
     window.clear()
 
-    for i in range(objects[0].HP + 1):
+    for i in range(objects[0].HP + 1): # UwU
         hearts[i].draw()
 
     for i in range(mana):
