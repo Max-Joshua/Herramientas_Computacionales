@@ -4,6 +4,7 @@
 This proyect consists of slight modifications made to 3 differenent Python games taken from "Freegames" 
 
 Play a new videogame:
+  
   Run setup.py
   (Make sure Python is up to date and has the necessary dependencies, if not, it will be installed automatically)
 
