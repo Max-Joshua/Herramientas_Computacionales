@@ -1,4 +1,4 @@
-import pyglet, os, json
+import pyglet, os, json, random
 
 width = 1500
 height = 800
@@ -18,13 +18,36 @@ objects = []
 plataforms = []
 
 def gameStarter():
+    print("starting game!")
+    global objects, plataforms, drawGroup0,drawGroup1,drawGroup2, mainBatch, bkgBatch, bkgBatch1
+
+    drawGroup0 = pyglet.graphics.OrderedGroup(0)
+    drawGroup1 = pyglet.graphics.OrderedGroup(1)
+    drawGroup2 = pyglet.graphics.OrderedGroup(2)
+
+    mainBatch = pyglet.graphics.Batch()
+    bkgBatch = pyglet.graphics.Batch()
+    bkgBatch1 = pyglet.graphics.Batch()
+
+    objects = []
+    plataforms = []
+
     with open('game/information.json') as file:
         info = json.load(file)
 
     objects.append(object(images.imgDict['Protagonist'], mainBatch, info['player']['x'], info['player']['y']))
 
+    for enemy in info['levels'][info['player']['currentlvl']]['enemies']:
+        if enemy['type'] == 0:
+            objects.append(object(images.imgDict['Enemie0'], mainBatch, enemy['x'], enemy['y'], enemy["HP"]))
+        elif enemy['type'] == 1:
+            objects.append(object(images.imgDict['Enemie1'], mainBatch, enemy['x'], enemy['y'], enemy["HP"]))
+
     for plataform in info['levels'][info['player']['currentlvl']]['objects']:
         plataforms.append(staticObject(plataform['x'], plataform['y'], plataform['width'], plataform['height'], images.imgDict['Platform'], images.imgDict['Platform_rocks']))
+
+    for monster in objects[1:]:
+        monster.moveMonster()
 
 class imagesLoader:
     spriteDict = {}
@@ -55,10 +78,19 @@ class object:
     drag = 10
     gravityActive = True
     canJump = False
-    def __init__( self, spriteImg, batch, x : float = 0, y : float = 0):
+
+    width = 0
+    height = 0
+
+    HP = 100
+    def __init__( self, spriteImg, batch, x : float = 0, y : float = 0, HP : int = 100):
         self.x = x
         self.y = y
         self.sprite = pyglet.sprite.Sprite(img = spriteImg, batch = batch)
+        self.HP = HP
+
+        self.width = self.sprite.width
+        self.height = self.sprite.height
 
     def calculateNextPoint(self):
         self.xVel += self.xAxcel * physiscDeltaTime - self.xVel / self.drag
@@ -76,6 +108,11 @@ class object:
         self.sprite.x = self.x + offset
         self.sprite.y = self.y
         self.sprite.update(scale_x = look)
+
+    def moveMonster(self, dx = None):
+        self.xVel = random.randint(-500,500)
+        self.yVel = random.randint(100,800)
+        pyglet.clock.schedule_once(self.moveMonster, random.randint(2,10))
     
     def checkCollisions(self):
         activateGravity = False
@@ -135,6 +172,16 @@ class object:
             self.gravityActive = False
         else:
             self.gravityActive = True
+
+    def checkCollisionWithList(self, list, action):
+        for object in list:
+            if object.x - self.sprite.width < self.x < object.x + object.width:
+                if object.y - self.sprite.height < self.y < object.y + object.height:
+                    action()
+
+def killPlayer():
+    print('player died!')
+    gameStarter()
 
 class staticObject:
     x = 0
@@ -206,6 +253,8 @@ maxGravity = -10000
 physiscDeltaTime = 0.02
 
 def runPhysics(dx):
+
+    objects[0].checkCollisionWithList(objects[1:], killPlayer)
     
     for object in objects:
         if object.gravityActive:
