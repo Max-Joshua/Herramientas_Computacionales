@@ -12,8 +12,11 @@ drawGroup2 = pyglet.graphics.OrderedGroup(2)
 mainBatch = pyglet.graphics.Batch()
 bkgBatch = pyglet.graphics.Batch()
 bkgBatch1 = pyglet.graphics.Batch()
+projectileBatch = pyglet.graphics.Batch()
 
 objects = []
+
+projectiles = []
 
 plataforms = []
 
@@ -83,7 +86,7 @@ class object:
     height = 0
 
     HP = 100
-    def __init__( self, spriteImg, batch, x : float = 0, y : float = 0, HP : int = 100):
+    def __init__( self, spriteImg, batch, x : float = 0, y : float = 0, HP : int = 4):
         self.x = x
         self.y = y
         self.sprite = pyglet.sprite.Sprite(img = spriteImg, batch = batch)
@@ -179,9 +182,67 @@ class object:
                 if object.y - self.sprite.height < self.y < object.y + object.height:
                     action()
 
+    def removeHitpoints(self, amount):
+        self.HP -= amount
+
+        if self.HP == 0:
+            self.destroy()
+    
+    def destroy(self):
+        self.sprite.delete()
+        objects.pop(objects.index(self))
+
+class bullet:
+    x = 0
+    y = 0
+    xVel = 50
+    yVel = 0
+    sprite = None
+    def __init__(self, img, player : object, batch, looking: int):
+        self.sprite = pyglet.sprite.Sprite(img = img, batch = batch)
+
+        self.width = self.sprite.width
+        self.height = self.sprite.height
+
+        self.x = player.x + player.width / 2 
+        self.y = player.y + player.height / 2 
+
+        self.xVel *= looking
+        self.sprite.x = self.x
+        self.sprite.y = self.y
+
+    def calculateCollisionsandNext(self, listToDestroy, otherList):
+        global physiscDeltaTime
+        self.x += self.xVel * physiscDeltaTime
+        self.sprite.x = self.x
+
+        for object in listToDestroy:
+            if object.x - self.sprite.width < self.x < object.x + object.width:
+                if object.y - self.sprite.height < self.y < object.y + object.height:
+                    object.removeHitpoints(1)
+                    self.destroy()
+                    break
+        else:
+            for object in otherList:
+                if object.x - self.sprite.width < self.x < object.x + object.width:
+                    if object.y - self.sprite.height < self.y < object.y + object.height:
+                        self.destroy()
+                        break
+
+    def destroy(self):
+        self.sprite.delete()
+        projectiles.pop(projectiles.index(self))
+
+
+
 def killPlayer():
-    print('player died!')
-    gameStarter()
+    objects[0].HP -= 1
+
+    objects[0].xVel *= -5
+    objects[0].yVel *= -5
+
+    if objects[0].HP < 0:
+        gameStarter()
 
 class staticObject:
     x = 0
@@ -217,6 +278,7 @@ def on_draw():
     bkgBatch1.draw()
     bkgBatch.draw()
     mainBatch.draw()
+    projectileBatch.draw()
 
 
 moveForce = 1000
@@ -235,7 +297,7 @@ def on_key_press(symbol, modifiers):
         objects[0].xAxcel += moveForce
 
     if symbol == 115: # if pressed the S key
-        print("S is pressed!")
+        projectiles.append(bullet(images.imgDict['test'], objects[0], projectileBatch, 1))
 
 @window.event
 def on_key_release(symbol, modifiers):
@@ -255,6 +317,9 @@ physiscDeltaTime = 0.02
 def runPhysics(dx):
 
     objects[0].checkCollisionWithList(objects[1:], killPlayer)
+
+    for object in projectiles:
+        object.calculateCollisionsandNext(objects[1:], plataforms)
     
     for object in objects:
         if object.gravityActive:
