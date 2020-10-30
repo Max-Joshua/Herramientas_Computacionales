@@ -195,7 +195,7 @@ class object:
 class bullet:
     x = 0
     y = 0
-    xVel = 50
+    xVel = 500
     yVel = 0
     sprite = None
     def __init__(self, img, player : object, batch, looking: int):
@@ -228,6 +228,9 @@ class bullet:
                     if object.y - self.sprite.height < self.y < object.y + object.height:
                         self.destroy()
                         break
+            else:
+                if not (0 < self.x < width):
+                    self.destroy()
 
     def destroy(self):
         self.sprite.delete()
@@ -297,7 +300,7 @@ def on_key_press(symbol, modifiers):
         objects[0].xAxcel += moveForce
 
     if symbol == 115: # if pressed the S key
-        projectiles.append(bullet(images.imgDict['test'], objects[0], projectileBatch, 1))
+        projectiles.append(bullet(images.imgDict['Fire_Ball'], objects[0], projectileBatch, 1))
 
 @window.event
 def on_key_release(symbol, modifiers):
