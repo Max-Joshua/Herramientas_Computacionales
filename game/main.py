@@ -101,7 +101,6 @@ def gameStarter():
 
 
 class imagesLoader:
-    spriteDict = {}
     def __init__(self):
         
         """Cretes a image dictionary ready to be used in pyglet. 
@@ -117,9 +116,45 @@ class imagesLoader:
 
         for file in files:
             self.imgDict[file[:-4]] = pyglet.image.load('game/img/' + file)
-            #self.spriteDict[file[:-4]] = pyglet.sprite.Sprite(img = self.imgDict[file[:-4]], batch = mainBatch)
         print('images loaded')
 
+pyglet.options['audio'] = ('openal', 'pulse', 'directsound', 'silent')
+
+class soundLoader:
+    soundDict = {}
+    streamDict = {}
+    def __init__(self):
+        
+        """Cretes a sound dictionary ready to be used in pyglet. 
+
+        ONLY .wav FILES ARE SUPPORTED"""
+        print('loading sound')
+        self.soundDict = {}
+        files = []
+        for root, dirs, foundFiles in os.walk("game/snd", topdown=False):
+            for name in foundFiles:
+                if name.endswith('.wav'):
+                    files.append(name)
+
+        for file in files:
+            self.soundDict[file[:-4]] = pyglet.media.load('game/snd/' + file, streaming=False)
+
+        files = []
+        for root, dirs, foundFiles in os.walk("game/stream", topdown=False):
+            for name in foundFiles:
+                if name.endswith('.wav'):
+                    files.append(name)
+
+        for file in files:
+            self.streamDict[file[:-4]] = pyglet.media.load('game/stream/' + file, streaming=True)
+            
+        print('sound loaded')
+    
+    def playLoopSound(self, sndToPlay):
+        self.player = pyglet.media.Player()
+        self.player.queue(sndToPlay)
+        self.player.loop = True
+        self.player.play()
 
 
 #   /$$$$$$  /$$                                                /$$                                  
@@ -278,6 +313,7 @@ class object:
         remove amount of HP, if HP is 0, destroy self, with sprite
         """
         self.HP -= amount
+        audio.soundDict['hit'].play()
 
         if self.HP == 0:
             self.destroy()
@@ -290,6 +326,7 @@ class object:
         self.sprite.delete()
         objects.pop(objects.index(self))
         mana = 5
+        audio.soundDict['die'].play()
 
 
 
@@ -364,8 +401,10 @@ def killPlayer():
 
     objects[0].xVel *= -5
     objects[0].yVel *= -5
+    audio.soundDict['hit'].play()
 
     if objects[0].HP < 0:
+        audio.soundDict['die'].play()
         gameStarter()
 
 
@@ -450,6 +489,7 @@ def on_key_press(symbol, modifiers):
             objects[0].yAxcel = 2000
             objects[0].yVel = 500
             objects[0].canJump = False
+            audio.soundDict['jump'].play()
 
     if symbol == 100: # if pressed the D key
         objects[0].xAxcel += moveForce
@@ -457,6 +497,7 @@ def on_key_press(symbol, modifiers):
     if symbol == 115: # if pressed the S key
         if mana > 0:
             projectiles.append(bullet(images.imgDict['Fire_Ball'], objects[0], projectileBatch, 1 if objects[0].xAxcel >= 0 else -1))
+            audio.soundDict['fire'].play()
             mana -= 1
 
 @window.event
@@ -505,6 +546,8 @@ def runPhysics(dx):
                                                  
 # procidures to start game itself
 images = imagesLoader()
+audio = soundLoader()
+audio.playLoopSound(audio.streamDict['song'])
 hearts = [pyglet.sprite.Sprite(img = images.imgDict['Heart']), pyglet.sprite.Sprite(img = images.imgDict['Heart']), pyglet.sprite.Sprite(img = images.imgDict['Heart']), pyglet.sprite.Sprite(img = images.imgDict['Heart']), pyglet.sprite.Sprite(img = images.imgDict['Heart'])]
 
 for i in range(len(hearts)):
