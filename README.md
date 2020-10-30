@@ -3,9 +3,6 @@
 
 This proyect consists of slight modifications made to 3 differenent Python games taken from "Freegames" 
 
-
-
-
 Play a new videogame:
   
   Run setup.py
