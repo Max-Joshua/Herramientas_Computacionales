@@ -7,6 +7,7 @@ window = pyglet.window.Window(1500, 800, resizable=False, vsync=True)
 
 mainBatch = pyglet.graphics.Batch()
 bkgBatch = pyglet.graphics.Batch()
+bkgBatch1 = pyglet.graphics.Batch()
 
 objects = []
 
@@ -19,7 +20,7 @@ def gameStarter():
     objects.append(object(images.imgDict['Protagonist'], mainBatch, info['player']['x'], info['player']['y']))
 
     for plataform in info['levels'][info['player']['currentlvl']]['objects']:
-        plataforms.append(staticObject(plataform['x'], plataform['y'], plataform['width'], plataform['height'], images.imgDict['Platform']))
+        plataforms.append(staticObject(plataform['x'], plataform['y'], plataform['width'], plataform['height'], images.imgDict['Platform'], images.imgDict['Platform_rocks']))
 
 class imagesLoader:
     spriteDict = {}
@@ -137,19 +138,26 @@ class staticObject:
     width = 0
     height = 0
 
-    def __init__(self, x, y, width, height, spriteImg):
+    def __init__(self, x, y, width, height, spriteImg, secondarySpriteImg):
         self.x = x
         self.y = y
         self.width = width
         self.height = height
 
         self.sprites = [pyglet.sprite.Sprite(img = spriteImg, batch = bkgBatch)]
+        self.bkgSprites = []
         scale = self.width / (self.width // self.sprites[0].width + 1) / self.sprites[0].width
         self.sprites[0].update(x=self.x, y=self.y + self.height - self.sprites[0].height,scale_x=scale)
 
         for i in range(1, self.width // self.sprites[0].width + 1):
             self.sprites.append(pyglet.sprite.Sprite(img = spriteImg, batch = bkgBatch))
             self.sprites[i].update(x=self.x + scale * self.sprites[0].width * i, y=self.y + self.height - self.sprites[0].height, scale_x = scale)
+
+        if self.height // self.sprites[0].height > 0:
+            for Y in range(0, self.height // self.sprites[0].height):
+                for i in range(0, self.width // self.sprites[0].width + 1):
+                    self.bkgSprites.append(pyglet.sprite.Sprite(img = secondarySpriteImg, batch = bkgBatch1))
+                    self.bkgSprites[i + Y * (self.height // self.sprites[0].height) ].update(x = self.x + scale * self.sprites[0].width * i, y = self.y , scale_x = scale)
 
         #self.sprite = pyglet.sprite.Sprite(img = spriteImg, batch = bkgBatch)
         #self.sprite.update(x=self.x, y=self.y,scale_x=self.width / self.sprite.width, scale_y = self.height / self.sprite.height)
@@ -158,6 +166,7 @@ class staticObject:
 def on_draw():
     global bkgBatch, mainBatch
     window.clear()
+    bkgBatch1.draw()
     bkgBatch.draw()
     mainBatch.draw()
 
