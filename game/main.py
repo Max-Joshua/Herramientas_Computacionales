@@ -5,6 +5,10 @@ height = 800
 
 window = pyglet.window.Window(1500, 800, resizable=False, vsync=True)
 
+drawGroup0 = pyglet.graphics.OrderedGroup(0)
+drawGroup1 = pyglet.graphics.OrderedGroup(1)
+drawGroup2 = pyglet.graphics.OrderedGroup(2)
+
 mainBatch = pyglet.graphics.Batch()
 bkgBatch = pyglet.graphics.Batch()
 bkgBatch1 = pyglet.graphics.Batch()
@@ -156,11 +160,8 @@ class staticObject:
         if self.height // self.sprites[0].height > 0:
             for Y in range(0, self.height // self.sprites[0].height):
                 for i in range(0, self.width // self.sprites[0].width + 1):
-                    self.bkgSprites.append(pyglet.sprite.Sprite(img = secondarySpriteImg, batch = bkgBatch1))
-                    self.bkgSprites[i + Y * (self.height // self.sprites[0].height) ].update(x = self.x + scale * self.sprites[0].width * i, y = self.y , scale_x = scale)
-
-        #self.sprite = pyglet.sprite.Sprite(img = spriteImg, batch = bkgBatch)
-        #self.sprite.update(x=self.x, y=self.y,scale_x=self.width / self.sprite.width, scale_y = self.height / self.sprite.height)
+                    self.bkgSprites.append(pyglet.sprite.Sprite(img = secondarySpriteImg, batch = bkgBatch1, group = drawGroup2))
+                    self.bkgSprites[i + Y * (self.height // self.sprites[0].height) ].update(x = self.x + scale * self.sprites[0].width * i, y = self.y - 5 , scale_x = scale)
 
 @window.event
 def on_draw():
