@@ -51,6 +51,8 @@ def rectangle(start, end):
         forward(end.x - (2 * start.x))
         left(90)
 
+    end_fill()
+
 def triangle(start, end):
     "Draw triangle from start to end."
     step = end.x - start.x
