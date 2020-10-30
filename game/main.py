@@ -3,6 +3,8 @@ import pyglet, os, json, random
 width = 1500
 height = 800
 
+mana = 5
+
 window = pyglet.window.Window(1500, 800, resizable=False, vsync=True)
 
 drawGroup0 = pyglet.graphics.OrderedGroup(0)
@@ -22,7 +24,7 @@ plataforms = []
 
 def gameStarter():
     print("starting game!")
-    global objects, plataforms, drawGroup0,drawGroup1,drawGroup2, mainBatch, bkgBatch, bkgBatch1
+    global objects, plataforms, drawGroup0,drawGroup1,drawGroup2, mainBatch, bkgBatch, bkgBatch1, mana
 
     drawGroup0 = pyglet.graphics.OrderedGroup(0)
     drawGroup1 = pyglet.graphics.OrderedGroup(1)
@@ -34,6 +36,8 @@ def gameStarter():
 
     objects = []
     plataforms = []
+
+    mana = 5
 
     with open('game/information.json') as file:
         info = json.load(file)
@@ -189,8 +193,10 @@ class object:
             self.destroy()
     
     def destroy(self):
+        global mana
         self.sprite.delete()
         objects.pop(objects.index(self))
+        mana = 5
 
 class bullet:
     x = 0
@@ -277,7 +283,15 @@ class staticObject:
 @window.event
 def on_draw():
     global bkgBatch, mainBatch
+    
     window.clear()
+
+    for i in range(objects[0].HP + 1):
+        hearts[i].draw()
+
+    for i in range(mana):
+        manaSprites[i].draw()
+
     bkgBatch1.draw()
     bkgBatch.draw()
     mainBatch.draw()
@@ -288,6 +302,7 @@ moveForce = 1000
 
 @window.event
 def on_key_press(symbol, modifiers):
+    global mana
     if symbol == 97: # if pressed the A key
         objects[0].xAxcel -= moveForce
     if symbol == 119: # if pressed the W key
@@ -300,7 +315,9 @@ def on_key_press(symbol, modifiers):
         objects[0].xAxcel += moveForce
 
     if symbol == 115: # if pressed the S key
-        projectiles.append(bullet(images.imgDict['Fire_Ball'], objects[0], projectileBatch, 1))
+        if mana > 0:
+            projectiles.append(bullet(images.imgDict['Fire_Ball'], objects[0], projectileBatch, 1 if objects[0].xAxcel >= 0 else -1))
+            mana -= 1
 
 @window.event
 def on_key_release(symbol, modifiers):
@@ -333,6 +350,17 @@ def runPhysics(dx):
         object.calculateNextPoint()
 
 images = imagesLoader()
+hearts = [pyglet.sprite.Sprite(img = images.imgDict['Heart']), pyglet.sprite.Sprite(img = images.imgDict['Heart']), pyglet.sprite.Sprite(img = images.imgDict['Heart']), pyglet.sprite.Sprite(img = images.imgDict['Heart']), pyglet.sprite.Sprite(img = images.imgDict['Heart'])]
+
+for i in range(len(hearts)):
+    hearts[i].update(x= 20 * i + 25, y=height - 50, scale = 3)
+
+manaSprites = [pyglet.sprite.Sprite(img = images.imgDict['ManaPoints']), pyglet.sprite.Sprite(img = images.imgDict['ManaPoints']), pyglet.sprite.Sprite(img = images.imgDict['ManaPoints']), pyglet.sprite.Sprite(img = images.imgDict['ManaPoints']), pyglet.sprite.Sprite(img = images.imgDict['ManaPoints'])]
+
+for i in range(len(hearts)):
+    manaSprites[i].update(x= 20 * i + 25, y=height - 100, scale = 1)
+
+
 gameStarter()
 
 pyglet.clock.schedule_interval(runPhysics, physiscDeltaTime)
