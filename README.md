@@ -10,12 +10,12 @@ Play a new videogame:
 
   To run the videogame, you must download a copy of the folder completely, run the program from the main code found in the "game" folder, and start enjoying the game.
 
-  the game controls are as follows:
+  The game controls are as follows:
+  
   A <---> D: move sideways
   W: Jump
   S: Shoot
 
   The player has five fireballs, which recharge with each enemy killed.
-
   The player has five lives which will be lost one by one if an enemy hits him.
   The game is restarted if the player runs out of health points
